@@ -1,0 +1,82 @@
+
+import java.util.Random;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.io.*;
+
+public class diceRollGame {
+	public static void main(String[] args) throws IOException {
+		int freq[] = new int[7];
+		int guessfreq[] = new int[7];
+		boolean mainProgram = true;
+		boolean playAgain = true;
+		while (mainProgram) {
+			int totalScore = 0;
+			while (playAgain) {
+				System.out.println("Type quit if you want to stop guessing");
+				boolean isCorrectInput = false;
+				while (isCorrectInput == false) {
+					Pattern diceNumber = Pattern.compile("[1-6]");
+					BufferedReader reader = new BufferedReader(
+							new InputStreamReader(System.in));
+					System.out.println("Input Guess: ");
+					String convertHere = reader.readLine();
+					if (convertHere.equals("quit")){
+						playAgain = false;
+						isCorrectInput = true;
+					}else{
+					Matcher matchInput = diceNumber.matcher(convertHere);
+					if (matchInput.find() || convertHere.equals("999")) {
+						int convertedAnswer = Integer.parseInt(convertHere);
+						 if (convertedAnswer == 1 || convertedAnswer == 2
+								|| convertedAnswer == 3 || convertedAnswer == 4
+								|| convertedAnswer == 5 || convertedAnswer == 6) {
+							 ++guessfreq[convertedAnswer];
+							Random objDice = new Random();
+
+							int diceRoller = 1 + objDice.nextInt(6);
+							++freq[diceRoller];
+							System.out
+									.println("Rolled Didce was " + diceRoller);
+							System.out.println("Your guess was "
+									+ convertedAnswer);
+							if (diceRoller == convertedAnswer) {
+								System.out.println("Your Guess was Right!\n");
+								totalScore += 1;
+								isCorrectInput = true;
+
+							} else {
+								System.out
+										.println("You've guessed it wrong!\n");
+								isCorrectInput = true;
+							}
+						} else {
+							System.out.println();
+						}
+					}
+				}
+				}
+			}
+			System.out.println("\nYour total score was " + totalScore);
+			System.out.println("Frequency of the numbers that came out were: ");
+			System.out.println("Face\tFreq\tTimesGuessed");
+			for(int face = 1; face < freq.length; face++){
+				System.out.println(face + "\t" + freq[face] + "\t"+ guessfreq[face]);
+			}
+			Scanner playAgainQuestion = new Scanner(System.in);
+			System.out.println("\nWanna Play Again?(Y/N): ");
+			String answerIt = playAgainQuestion.next();
+			if (answerIt.equals("Y") || answerIt.equals("y")) {
+				System.out.println();
+				playAgain = true;
+			} else if (answerIt.equals("N") || answerIt.equals("n")) {
+				System.out.println("\n\nTerminating program......");
+				mainProgram = false;
+			} else {
+				System.out.println("Invalid answer!");
+				playAgain = false;
+			}
+		}
+	}
+}
